@@ -6,57 +6,74 @@ import java.net.URL;
 
 public class MainFrame extends JFrame {
     private static final long serialVersionUID = 1L;
+    private JPanel mainPanel;
+
     public MainFrame() {
-        setTitle("LibriSphere • Library Management System");
+        setTitle("Library Management System");
         setSize(950, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
+        // Set window icon
         try {
-            URL iconUrl = getClass().getResource("/images/library-icon.png");
-            if (iconUrl != null) {
-                setIconImage(new ImageIcon(iconUrl).getImage());
-            }
+            ImageIcon icon = new ImageIcon(getClass().getResource("/images/library-icon.png"));
+            Image image = icon.getImage();
+            setIconImage(image); // This sets the window icon
         } catch (Exception e) {
-            System.err.println("Custom icon not loaded");
+            System.err.println("Could not load window icon: " + e.getMessage());
         }
-
+        
         initComponents();
     }
 
     private void initComponents() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mainPanel.setBackground(new Color(240, 240, 240));
-
-        JLabel header = new JLabel("LIBRISPHERE", SwingConstants.CENTER);
-        header.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        header.setForeground(new Color(30, 80, 150));
-        header.setBorder(BorderFactory.createEmptyBorder(15, 0, 20, 0));
         
-        JLabel subtitle = new JLabel("Library Management System", SwingConstants.CENTER);
-        subtitle.setFont(new Font("Segoe UI", Font.ITALIC, 14));
-        subtitle.setForeground(new Color(100, 100, 100));
+        // Create header panel with logo and text
+        JPanel headerPanel = new JPanel(new BorderLayout(10, 0));
+        headerPanel.setBackground(new Color(245, 245, 245));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.add(header, BorderLayout.CENTER);
-        headerPanel.add(subtitle, BorderLayout.SOUTH);
+        // Logo and title panel
+        JPanel logoTitlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        logoTitlePanel.setBackground(new Color(245, 245, 245));
+
+        try {
+            // Load and scale the logo for header
+            ImageIcon originalIcon = new ImageIcon(getClass().getResource("/images/library-icon.png"));
+            Image scaledImage = originalIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+            JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
+            logoTitlePanel.add(logoLabel);
+        } catch (Exception e) {
+            System.err.println("Could not load logo: " + e.getMessage());
+        }
+
+        // System name label
+        JLabel systemNameLabel = new JLabel("LibriSphere");
+        systemNameLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        systemNameLabel.setForeground(new Color(70, 130, 180));
+        logoTitlePanel.add(systemNameLabel);
+
+        headerPanel.add(logoTitlePanel, BorderLayout.CENTER);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
-
+        
+        // Tabbed pane for different sections
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Books", createIcon("book.png"), new BookPanel());
-        tabbedPane.addTab("Members", createIcon("user.png"), new MemberPanel());
-        tabbedPane.addTab("Loans", createIcon("loan.png"), new LoanPanel());
+        tabbedPane.addTab("Books", loadIcon("book.png"), new BookPanel());
+        tabbedPane.addTab("Members", loadIcon("user.png"), new MemberPanel());
+        tabbedPane.addTab("Loans", loadIcon("loan.png"), new LoanPanel());
         
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         add(mainPanel);
     }
 
-    private ImageIcon createIcon(String filename) {
+    private ImageIcon loadIcon(String filename) {
         try {
-            URL imgURL = getClass().getResource("/images/" + filename);
-            return imgURL != null ? new ImageIcon(imgURL) : new ImageIcon();
+            URL imageUrl = getClass().getResource("/images/" + filename);
+            return imageUrl != null ? new ImageIcon(imageUrl) : new ImageIcon();
         } catch (Exception e) {
+            e.printStackTrace();
             return new ImageIcon();
         }
     }
