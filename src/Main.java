@@ -1,12 +1,11 @@
-import javax.swing.*;          // For Swing components (JFrame, ImageIcon)
-import javax.swing.border.*;   // For BorderFactory
-import java.awt.*;             // For Color, Font, and other AWT classes
-import java.awt.event.*;       // For event handling
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
+import java.awt.event.*;  
 import ui.MainFrame;
 
 public class Main {
     public static void main(String[] args) {
-        // Set modern look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -17,7 +16,6 @@ public class Main {
             }
         }
 
-        // Create and show the GUI
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = new MainFrame();
             frame.setVisible(true);
